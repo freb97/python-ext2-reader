@@ -1,0 +1,10 @@
+# IDE specific files
+.idea/
+.vscode/
+.vs/
+
+# Conda cache files
+__pychache__/
+
+# Mac files
+.DS_Store
