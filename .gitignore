@@ -5,6 +5,7 @@
 
 # Conda cache files
 __pychache__/
+**/__pycache/
 
 # Mac files
 .DS_Store
