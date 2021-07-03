@@ -1,20 +1,30 @@
 from ext2 import groupdescriptor
 from ext2 import superblock
+from ext2 import stats
 
 
 class File(object):
     def __init__(self):
+        self.file_path = None
+        self.file_name = None
+        self.file_stats = None
+
         self.super_block = None
         self.group_descriptor = None
 
-    def read(self, file_path):
-        data = open(file_path, "rb").read()
+    def read(self, file_path, file_name):
+        data = open(file_path + file_name, "rb").read()
 
-        self.super_block = superblock.SuperBlock(data)
-        self.group_descriptor = groupdescriptor.GroupDescriptor(data)
+        self.file_path = file_path
+        self.file_name = file_name
 
-    def getSuperBlock(self):
-        return self.super_block
+        read_position = 1024
+        self.super_block = superblock.SuperBlock(data[read_position:])
 
-    def getGroupDescriptor(self):
-        return self.group_descriptor
+        read_position = self.super_block.s_log_block_size
+        self.group_descriptor = groupdescriptor.GroupDescriptor(data[read_position:])
+
+        self.file_stats = stats.Stats(self)
+
+    def stats(self):
+        print(self.file_stats.toString())
