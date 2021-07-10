@@ -1,19 +1,17 @@
-from ext2 import blockgroup
-from ext2 import groupdescriptor
-from ext2 import inodetable
 from ext2 import stats
 from ext2 import superblock
+from ext2 import groupdescriptor
+from ext2 import blockgroup
 
 
 class File(object):
     def __init__(self):
         self.file_path = None
         self.file_name = None
-        self.file_stats = None
+        self.file_statistics = None
 
         self.super_block = None
-        self.block_size = None
-        self.sparse_super = False
+        self.group_descriptor = None
 
         self.block_groups = []
 
@@ -23,19 +21,40 @@ class File(object):
         self.file_path = file_path
         self.file_name = file_name
 
-        self.super_block = superblock.SuperBlock(data)
-        self.block_size = self.super_block.s_block_size
-        self.sparse_super = self.super_block.s_feature_compat >= 3
+        self.get_super_block(data)
+        self.get_group_descriptor(data)
 
+        self.get_block_groups(data)
+
+        self.file_statistics = stats.Stats(self)
+
+    def print_statistics(self):
+        print(self.file_statistics.to_string())
+
+    def get_super_block(self, file_input):
+        self.super_block = superblock.SuperBlock(file_input)
+
+    def get_group_descriptor(self, file_input):
+        block_size = self.super_block.s_block_size
+        self.group_descriptor = groupdescriptor.GroupDescriptor(file_input[block_size:block_size*2])
+
+    def get_block_groups(self, file_input):
         blocks_per_group = self.super_block.s_blocks_per_group
-        num_blocks_per_group = int(blocks_per_group / self.block_size)
+        block_size = self.super_block.s_block_size
 
-        test = blockgroup.BlockGroup(data, self.block_size, num_blocks_per_group, 0, self.sparse_super)
-        print(hex(test.super_block.s_magic))
-        print(test.group_descriptor.bg_inode_table)
-        print(test.inode_table.i_ctime)
+        block_group_size = blocks_per_group * block_size
 
-        self.file_stats = stats.Stats(self)
+        i = 0
 
-    def stats(self):
-        print(self.file_stats.to_string())
+        while True:
+            start_position = i*block_group_size
+            end_position = i*block_group_size+block_group_size
+
+            block_group = blockgroup.BlockGroup(file_input[start_position:end_position], blocks_per_group, block_size)
+
+            if block_group.error:
+                break
+
+            self.block_groups.append(block_group)
+
+            i += 1
