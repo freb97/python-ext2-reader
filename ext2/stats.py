@@ -21,28 +21,31 @@ class Stats(object):
         if self.output != "":
             return self.output
 
-        self.output = "EXT2 File statistics for file \"" + self.file_name + "\":" + "\n\n"
+        self.formatted_line("EXT2 File statistics for file", self.file_name, "\n", tab_size=3)
 
-        self.formatted_line("Magic number (must equal 0xef53)", str(self.magic_number), 2)
-        self.formatted_line("Created on OS", self.creator_os, 7)
+        self.formatted_line("Magic number (must equal 0xef53)", str(self.magic_number), tab_size=2)
+        self.formatted_line("Created on OS", self.creator_os, tab_size=7)
         self.formatted_line()
 
-        self.formatted_line("Block size", str(self.block_size), 8)
-        self.formatted_line("Blocks per group", str(int(self.blocks_per_group)), 6)
-        self.formatted_line("Block group count", str(int(self.block_group_count)), 6)
-        self.formatted_line("Free blocks count", str(int(self.free_blocks)), 6)
+        self.formatted_line("Block size", str(self.block_size), "bytes", tab_size=8)
+        self.formatted_line("Blocks per group", str(int(self.blocks_per_group)), tab_size=6)
+        self.formatted_line("Block group count", str(int(self.block_group_count)), tab_size=6)
+        self.formatted_line("Free blocks count", str(int(self.free_blocks)), tab_size=6)
         self.formatted_line()
 
-        self.formatted_line("Inode size", str(int(self.inode_size)), 8)
-        self.formatted_line("Free inode count", str(int(self.free_inodes)), 6)
+        self.formatted_line("Inode size", str(int(self.inode_size)), tab_size=8)
+        self.formatted_line("Free inode count", str(int(self.free_inodes)), tab_size=6)
 
         return self.output
 
-    def formatted_line(self, title="", content="", tab_size=0):
-        if title != "":
-            title += ":"
+    def formatted_line(self, prefix="", content="", suffix="", tab_size=0):
+        if prefix != "":
+            prefix += ":"
 
-        self.output += title + tab_size * self.tab + content + self.br
+        if suffix != "":
+            suffix = " " + suffix
+
+        self.output += prefix + tab_size * self.tab + content + suffix + self.br
 
     @staticmethod
     def get_creator_os_name(creator_os):
