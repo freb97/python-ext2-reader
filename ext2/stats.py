@@ -34,6 +34,12 @@ class Stats(object):
 
         return self.output
 
+    def formatted_line(self, title="", content="", tab_size=0):
+        if title != "":
+            title += ":"
+
+        self.output += title + tab_size * self.tab + content + self.br
+
     @staticmethod
     def get_creator_os_name(creator_os):
         os_name = "Not specified"
@@ -50,9 +56,3 @@ class Stats(object):
             os_name = "Lites"
 
         return os_name
-
-    def formatted_line(self, title="", content="", tab_size=0):
-        if title != "":
-            title += ":"
-
-        self.output += title + tab_size * self.tab + content + self.br

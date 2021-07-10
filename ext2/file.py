@@ -45,7 +45,6 @@ class File(object):
         block_group_size = blocks_per_group * block_size
 
         i = 0
-
         while True:
             start_position = i*block_group_size
             end_position = i*block_group_size+block_group_size
