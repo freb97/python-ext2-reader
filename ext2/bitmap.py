@@ -1,4 +1,22 @@
 class BitMap(object):
+    """
+    Class representation of a bit map.
+
+    Attributes
+    ----------
+    bytes : bytearray
+        The bytes representing the bit map.
+
+    Methods
+    -------
+    get_bit(index)
+        Gets a bit in the bit map at a given index.
+    to_string()
+        Gets the bit map as a string of bits.
+    get_ones_percentage()
+        Gets the percentage of bits that represent a 1.
+    """
+
     def __init__(self, file_input):
         """
         Class constructor.

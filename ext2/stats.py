@@ -14,11 +14,11 @@ class Stats(object):
 
     Methods
     -------
-    to_string
+    to_string()
         Gets the file statistics as a string.
-    formatted_line
+    formatted_line(prefix, context, suffix, tab_size)
         Creates a formatted line for file statistics representation.
-    get_creator_os_name
+    get_creator_os_name(creator_os)
         Gets the file creator os name from the integer input.
     """
 
