@@ -29,7 +29,7 @@ class File(object):
         self.file_statistics = stats.Stats(self)
 
     def print_statistics(self):
-        print(self.file_statistics.to_string())
+        print(self.file_statistics.get_statistics())
 
     def get_super_block(self, file_input):
         self.super_block = superblock.SuperBlock(file_input)
