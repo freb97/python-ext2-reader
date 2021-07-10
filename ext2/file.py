@@ -55,5 +55,4 @@ class File(object):
                 break
 
             self.block_groups.append(block_group)
-
             i += 1

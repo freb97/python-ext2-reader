@@ -5,11 +5,13 @@ class Stats(object):
         self.block_size = file.super_block.s_block_size
         self.blocks_per_group = file.super_block.s_blocks_per_group / self.block_size
         self.block_group_count = len(file.block_groups)
+        self.free_blocks = file.group_descriptor.bg_free_blocks_count
 
         self.magic_number = hex(file.super_block.s_magic)
         self.creator_os = self.get_creator_os_name(file.super_block.s_creator_os)
 
         self.inode_size = file.super_block.s_inode_size
+        self.free_inodes = file.group_descriptor.bg_free_inodes_count
 
         self.br = "\n"
         self.tab = "\t"
@@ -28,9 +30,11 @@ class Stats(object):
         self.formatted_line("Block size", str(self.block_size), 8)
         self.formatted_line("Blocks per group", str(int(self.blocks_per_group)), 6)
         self.formatted_line("Block group count", str(int(self.block_group_count)), 6)
+        self.formatted_line("Free blocks count", str(int(self.free_blocks)), 6)
         self.formatted_line()
 
         self.formatted_line("Inode size", str(int(self.inode_size)), 8)
+        self.formatted_line("Free inode count", str(int(self.free_inodes)), 6)
 
         return self.output
 

@@ -2,6 +2,7 @@ import struct
 from ext2 import superblock
 from ext2 import groupdescriptor
 from ext2 import inodetable
+from ext2 import bitmap
 
 
 class BlockGroup(object):
@@ -23,13 +24,18 @@ class BlockGroup(object):
         self.get_blocks(file_input)
         self.check_for_super_block()
 
+        block_bitmap_position = 0
+        inode_bitmap_position = 1
         inode_table_position = 2
-        offset = 0
 
-        if self.super_block is not None:
-            offset = 2
+        if self.group_descriptor is not None:
+            block_bitmap_position = self.group_descriptor.bg_block_bitmap
+            inode_bitmap_position = self.group_descriptor.bg_inode_bitmap
+            inode_table_position = self.group_descriptor.bg_inode_table
 
-        self.get_inode_table(self.blocks[inode_table_position + offset])
+        self.block_bitmap = bitmap.BitMap(self.blocks[block_bitmap_position])
+        self.inode_bitmap = bitmap.BitMap(self.blocks[inode_bitmap_position])
+        self.get_inode_table(self.blocks[inode_table_position])
 
     def get_blocks(self, data):
         for i in range(self.blocks_per_group):
