@@ -25,14 +25,14 @@ class Inode(object):
         32bit value representing the number of seconds since january 1st 1970, of when the inode was deleted.
     i_gid : half
         16bit value of the POSIX group having access to this file.
-    i_links_count
+    i_links_count : half
         16bit value indicating how many times this particular inode is linked (referred to). Most files will have a link
         count of 1. Files with hard links pointing to them will have an additional count for each hard link.
-    i_blocks
+    i_blocks : int
         32-bit value representing the total number of 512-bytes blocks reserved to contain the data of this inode,
         regardless if these blocks are used or not. The block numbers of these reserved blocks are contained in the
         i_block array.
-    i_flags
+    i_flags : int
         32bit value indicating how the ext2 implementation should behave when accessing the data for this inode.
     """
 
