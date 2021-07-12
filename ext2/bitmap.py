@@ -32,7 +32,7 @@ class BitMap(object):
 
         Parameters
         ----------
-        file_input : int
+        file_input : bytes
             The array of bytes representing the bit map.
         """
 
