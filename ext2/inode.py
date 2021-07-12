@@ -7,6 +7,8 @@ class Inode(object):
 
     Attributes
     ----------
+    reader : binaryreader.BinaryReader
+        The reader used to extract values from the file input and track errors.
     i_mode : hex
         16bit value used to indicate the format of the described file and the access rights.
     i_uid : hex
@@ -26,14 +28,24 @@ class Inode(object):
     i_gid : half
         16bit value of the POSIX group having access to this file.
     i_links_count : half
-        16bit value indicating how many times this particular inode is linked (referred to). Most files will have a link
-        count of 1. Files with hard links pointing to them will have an additional count for each hard link.
+        16bit value indicating how many times this particular inode is linked (referred to).
     i_blocks : int
-        32-bit value representing the total number of 512-bytes blocks reserved to contain the data of this inode,
-        regardless if these blocks are used or not. The block numbers of these reserved blocks are contained in the
-        i_block array.
+        32-bit value representing the total number of 512-bytes blocks reserved to contain the data of this inode.
     i_flags : int
         32bit value indicating how the ext2 implementation should behave when accessing the data for this inode.
+    i_osd1 : int
+        32bit OS dependant value.
+    i_block : int[15]
+        15 x 32bit block numbers pointing to the blocks containing the data for this inode.
+    i_generation : int
+        32bit value used to indicate the file version (used by NFS).
+    i_file_acl : int
+        32bit value indicating the block number containing the extended attributes.
+    i_dir_acl : int
+        In revision 0 this 32bit value is always 0. In revision 1, for regular files this 32bit value contains the high
+        32 bits of the 64bit file size.
+    i_faddr : int
+        32bit value indicating the location of the file fragment.
     """
 
     def __init__(self, file_input=None, index=0):
@@ -42,34 +54,36 @@ class Inode(object):
 
         Parameters
         ----------
-        file_input : bytearray
+        file_input : bytes
             The array of bytes representing the inode.
+        index : int
+            The index of the inode.
         """
 
-        reader = binaryreader.BinaryReader(file_input)
+        self.reader = binaryreader.BinaryReader(file_input)
 
         self.i_inode = index
-        self.i_mode = hex(reader.get_data_from_binary(0, 2, "<H"))
-        self.i_uid = reader.get_data_from_binary(2, 4, "<H")
-        self.i_size = reader.get_data_from_binary(4, 8, "<L")
-        self.i_atime = reader.get_data_from_binary(8, 12, "<L")
-        self.i_ctime = reader.get_data_from_binary(12, 16, "<L")
-        self.i_mtime = reader.get_data_from_binary(16, 20, "<L")
-        self.i_dtime = reader.get_data_from_binary(20, 24, "<L")
-        self.i_gid = reader.get_data_from_binary(24, 26, "<H")
-        self.i_links_count = reader.get_data_from_binary(26, 28, "<H")
-        self.i_blocks = reader.get_data_from_binary(28, 32, "<L")
-        self.i_flags = reader.get_data_from_binary(32, 36, "<L")
-        self.i_osd1 = reader.get_data_from_binary(36, 40, "<L")
+        self.i_mode = hex(self.reader.get_data_from_binary(0, 2, "<H"))
+        self.i_uid = self.reader.get_data_from_binary(2, 4, "<H")
+        self.i_size = self.reader.get_data_from_binary(4, 8, "<L")
+        self.i_atime = self.reader.get_data_from_binary(8, 12, "<L")
+        self.i_ctime = self.reader.get_data_from_binary(12, 16, "<L")
+        self.i_mtime = self.reader.get_data_from_binary(16, 20, "<L")
+        self.i_dtime = self.reader.get_data_from_binary(20, 24, "<L")
+        self.i_gid = self.reader.get_data_from_binary(24, 26, "<H")
+        self.i_links_count = self.reader.get_data_from_binary(26, 28, "<H")
+        self.i_blocks = self.reader.get_data_from_binary(28, 32, "<L")
+        self.i_flags = self.reader.get_data_from_binary(32, 36, "<L")
+        self.i_osd1 = self.reader.get_data_from_binary(36, 40, "<L")
 
         self.i_block = []
         read_position = 40
         for i in range(15):
-            inode_pointer = reader.get_data_from_binary(read_position, read_position + 4, "<L")
+            inode_pointer = self.reader.get_data_from_binary(read_position, read_position + 4, "<L")
             self.i_block.append(inode_pointer)
             read_position += 4
 
-        self.i_generation = reader.get_data_from_binary(100, 104, "<L")
-        self.i_file_acl = reader.get_data_from_binary(104, 108, "<L")
-        self.i_dir_acl = reader.get_data_from_binary(108, 112, "<L")
-        self.i_faddr = reader.get_data_from_binary(112, 116, "<L")
+        self.i_generation = self.reader.get_data_from_binary(100, 104, "<L")
+        self.i_file_acl = self.reader.get_data_from_binary(104, 108, "<L")
+        self.i_dir_acl = self.reader.get_data_from_binary(108, 112, "<L")
+        self.i_faddr = self.reader.get_data_from_binary(112, 116, "<L")

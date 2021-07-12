@@ -9,5 +9,5 @@ ext2file.read("data/", "agwc.txt")
 
 ext2file.print_statistics()
 
-img = Image.open(io.BytesIO(ext2file.data_blocks))
-img.save("data/out.jpg")
+# img = Image.open(io.BytesIO(ext2file.data_blocks))
+# img.save("data/out.jpg")

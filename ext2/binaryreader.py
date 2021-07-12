@@ -7,7 +7,7 @@ class BinaryReader(object):
 
     Attributes
     ----------
-    binary_data : bytearray
+    binary_data : bytes
         The byte array to extract values from.
     error : bool
         The error state of the reader.
@@ -19,7 +19,7 @@ class BinaryReader(object):
 
         Parameters
         ----------
-        data : bytearray
+        data : bytes
             The byte array to extract values from.
         """
 

@@ -52,7 +52,6 @@ class Stats(object):
 
         block_size = self.file.super_block.s_block_size
         blocks_per_group = self.file.super_block.s_blocks_per_group / block_size
-        # block_group_count = len(self.file.block_groups)
         free_blocks = self.file.group_descriptors[0].bg_free_blocks_count
     
         magic_number = hex(self.file.super_block.s_magic)
@@ -69,7 +68,6 @@ class Stats(object):
 
         self.formatted_line("Block size", str(block_size), "bytes", tab_size=8)
         self.formatted_line("Blocks per group", str(int(blocks_per_group)), tab_size=6)
-        # self.formatted_line("Block group count", str(int(block_group_count)), tab_size=6)
         self.formatted_line("Free blocks count", str(int(free_blocks)), tab_size=6)
         self.formatted_line()
 

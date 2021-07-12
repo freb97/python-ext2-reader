@@ -2,7 +2,89 @@ from ext2 import binaryreader
 
 
 class SuperBlock(object):
+    """
+    Class representation of a super block.
+
+    Attributes
+    ----------
+    reader : binaryreader.BinaryReader
+        The reader used to extract values from the file input and track errors.
+    s_inodes_count : int
+        32bit value indicating the total number of inodes.
+    s_blocks_count : int
+        32bit value indicating the total number of blocks.
+    s_r_blocks_count : int
+        32bit value indicating the total number of blocks reserved for the usage of the super user.
+    s_free_blocks_count : int
+        32bit value indicating the total number of free blocks.
+    s_free_inodes_count : int
+        32bit value indicating the total number of free inodes.
+    s_first_data_block : int
+        32bit value identifying the first data block.
+    s_log_block_size : int
+        The block size is computed using this 32bit value as the number of bits to shift left the value 1024.
+    s_log_frag_size : int
+        The fragment size is computed using this 32bit value as the number of bits to shift left the value 1024.
+    s_blocks_per_group : int
+        32bit value indicating the total number of blocks per group.
+    s_frags_per_group : int
+        32bit value indicating the total number of fragments per group.
+    s_inodes_per_group : int
+        32bit value indicating the total number of inodes per group.
+    s_mtime : int
+        Unix timestamp of the last time the file system was mounted.
+    s_wtime : int
+        Unix timestamp of the last write access to the file system.
+    s_mnt_count : half
+        16bit value indicating how many time the file system was mounted since the last time it was fully verified.
+    s_max_mnt_count : half
+        16bit value indicating the max number of times the file system may be mounted before a full check is performed.
+    s_magic : hex
+        16bit value identifying the file system as Ext2.
+    s_state : half
+        16bit value indicating the file system state.
+    s_errors : half
+        16bit value indicating what the file system driver should do when an error is detected.
+    s_minor_rev_level : half
+        16bit value identifying the minor revision level within its revision level.
+    s_lastcheck : int
+        Unix timestamp of the last file system check.
+    s_checkinterval : int
+        Maximum Unix time interval, as defined by POSIX, allowed between file system checks.
+    s_creator_os : int
+        32bit identifier of the os that created the file system.
+    s_rev_level : int
+        32bit revision level value.
+    s_def_resuid : half
+        16bit value used as the default user id for reserved blocks.
+    s_def_resgid : half
+        16bit value used as the default group id for reserved blocks.
+    s_first_ino : int
+        32bit value used as index to the first inode useable for standard files.
+    s_inode_size : half
+        16bit value indicating the size of the inode structure.
+    s_block_group_nr : half
+        16bit value used to indicate the block group number hosting this super block structure.
+    s_feature_compat : int
+        32bit bitmask of compatible features.
+    s_feature_incompat : int
+        32bit bitmask of incompatible features.
+    s_feature_ro_compat : int
+        32bit bitmask of “read-only” features.
+    s_block_size : int
+        The precomputed s_log_block_size for convenient usage.
+    """
+
     def __init__(self, file_input):
+        """
+        Class constructor.
+
+        Parameters
+        ----------
+        file_input : bytes
+            The array of bytes representing the super block.
+        """
+
         self.reader = binaryreader.BinaryReader(file_input)
 
         self.s_inodes_count = self.reader.get_data_from_binary(0, 4, "<L")
