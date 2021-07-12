@@ -36,7 +36,7 @@ class Inode(object):
         32bit value indicating how the ext2 implementation should behave when accessing the data for this inode.
     """
 
-    def __init__(self, file_input):
+    def __init__(self, file_input=None, index=0):
         """
         Class constructor.
 
@@ -48,6 +48,7 @@ class Inode(object):
 
         reader = binaryreader.BinaryReader(file_input)
 
+        self.i_inode = index
         self.i_mode = hex(reader.get_data_from_binary(0, 2, "<H"))
         self.i_uid = reader.get_data_from_binary(2, 4, "<H")
         self.i_size = reader.get_data_from_binary(4, 8, "<L")
@@ -59,3 +60,16 @@ class Inode(object):
         self.i_links_count = reader.get_data_from_binary(26, 28, "<H")
         self.i_blocks = reader.get_data_from_binary(28, 32, "<L")
         self.i_flags = reader.get_data_from_binary(32, 36, "<L")
+        self.i_osd1 = reader.get_data_from_binary(36, 40, "<L")
+
+        self.i_block = []
+        read_position = 40
+        for i in range(15):
+            inode_pointer = reader.get_data_from_binary(read_position, read_position + 4, "<L")
+            self.i_block.append(inode_pointer)
+            read_position += 4
+
+        self.i_generation = reader.get_data_from_binary(100, 104, "<L")
+        self.i_file_acl = reader.get_data_from_binary(104, 108, "<L")
+        self.i_dir_acl = reader.get_data_from_binary(108, 112, "<L")
+        self.i_faddr = reader.get_data_from_binary(112, 116, "<L")

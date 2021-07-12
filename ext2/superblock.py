@@ -3,7 +3,7 @@ from ext2 import binaryreader
 
 class SuperBlock(object):
     def __init__(self, file_input):
-        self.reader = binaryreader.BinaryReader(file_input[1024:])
+        self.reader = binaryreader.BinaryReader(file_input)
 
         self.s_inodes_count = self.reader.get_data_from_binary(0, 4, "<L")
         self.s_blocks_count = self.reader.get_data_from_binary(4, 8, "<L")
