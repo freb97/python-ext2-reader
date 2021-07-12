@@ -9,3 +9,6 @@ __pychache__/
 
 # Mac files
 .DS_Store
+
+# Project specific files
+data/agwc.jpg
