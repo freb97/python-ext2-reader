@@ -1,3 +1,12 @@
+"""superblock.py: EXT2 Super block for storing file system information."""
+
+__author__ = "Frederik Bußmann"
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Frederik Bußmann"
+__email__ = "frederik@bussmann.io"
+
+
 from ext2 import binaryreader
 
 

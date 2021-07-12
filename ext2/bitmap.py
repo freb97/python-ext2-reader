@@ -1,3 +1,12 @@
+"""bitmap.py: EXT2 Bitmap for storing block or inode information."""
+
+__author__ = "Frederik Bußmann"
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Frederik Bußmann"
+__email__ = "frederik@bussmann.io"
+
+
 class BitMap(object):
     """
     Class representation of a bit map.

@@ -1,3 +1,12 @@
+"""binaryreader.py: EXT2 Binary reader for file value extraction."""
+
+__author__ = "Frederik Bußmann"
+__license__ = "MIT"
+__version__ = "1.0.0"
+__maintainer__ = "Frederik Bußmann"
+__email__ = "frederik@bussmann.io"
+
+
 import struct
 
 
