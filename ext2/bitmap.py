@@ -95,3 +95,39 @@ class BitMap(object):
                 ones += 1
 
         return ones / bit_count
+
+    def compare_with_list(self, entries):
+        """
+        Compares a list of entries with a bitmap.
+
+        Parameters
+        ----------
+        entries : list
+            The list of elements to compare with the bitmap.
+
+        Returns
+        -------
+        list
+            All entries that have a corresponding positive entry in the bitmap.
+        """
+
+        positive_entries = []
+
+        print(len(self))
+
+        for i in range(len(self)):
+            if self.get_bit(i) == 1:
+                positive_entries.append(entries[i])
+
+        return positive_entries
+
+    def __len__(self):
+        """
+        Overrides the len function.
+
+        Returns
+        -------
+        int
+            The length of the bytearray that's making up the bitmap.
+        """
+        return len(self.bytes)

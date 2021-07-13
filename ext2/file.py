@@ -44,6 +44,8 @@ class File(object):
         The cached inode bitmap instance.
     inodes : inode.Inode[]
         All inodes in the file.
+    used_inodes : inode.Inode[]
+        All used inodes in the file according to the inode bitmap.
 
     Methods
     -------
@@ -76,6 +78,7 @@ class File(object):
         self.inode_bitmap = None
 
         self.inodes = []
+        self.used_inodes = []
 
     def read(self, file_path, file_name):
         """
@@ -106,13 +109,6 @@ class File(object):
         self.get_inodes()
 
         self.file_statistics = stats.Stats(self)
-
-    def print_statistics(self):
-        """
-        Prints the statistics of the file.
-        """
-
-        print(self.file_statistics.get_statistics())
 
     def get_super_block(self, file_input):
         """
@@ -177,7 +173,10 @@ class File(object):
             for i in range(inodes_per_group):
                 # Get inodes from inode table
                 current_inode = block_data[i * self.inode_size:(i + 1) * self.inode_size]
-                self.inodes.append(inode.Inode(current_inode, i + 1))
+                self.inodes.append(inode.Inode(current_inode, i))
+
+        # Check for used inodes
+        self.used_inodes = self.inode_bitmap.compare_with_list(self.inodes)
 
     def get_inode_blocks(self, input_inode):
         """
@@ -285,3 +284,10 @@ class File(object):
             read_position += 4
 
         return block
+
+    def print_statistics(self):
+        """
+        Prints the statistics of the file.
+        """
+
+        print(self.file_statistics.get_statistics())

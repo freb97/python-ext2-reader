@@ -11,4 +11,5 @@ __pychache__/
 .DS_Store
 
 # Project specific files
-data/agwc.jpg
+data/*
+!data/agwc.txt
