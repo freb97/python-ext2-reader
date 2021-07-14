@@ -130,4 +130,5 @@ class BitMap(object):
         int
             The length of the bytearray that's making up the bitmap.
         """
+
         return len(self.bytes)
